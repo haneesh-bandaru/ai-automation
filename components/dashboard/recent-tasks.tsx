@@ -59,14 +59,14 @@ export const RecentTasks = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Badge variant={
-                  task.status === "Completed" ? "success" :
-                  task.status === "In Progress" ? "default" : "secondary"
+                  task.status === "Completed" ? "default" :
+                    task.status === "In Progress" ? "default" : "secondary"
                 }>
                   {task.status}
                 </Badge>
                 <Badge variant={
                   task.priority === "High" ? "destructive" :
-                  task.priority === "Medium" ? "warning" : "outline"
+                    task.priority === "Medium" ? "secondary" : "outline"
                 }>
                   {task.priority}
                 </Badge>
