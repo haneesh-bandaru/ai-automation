@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Ensure the correct import
+import { StatusCodes } from "http-status-codes";
 
 const { GEMINI_API_KEY } = process.env;
 
@@ -12,7 +13,12 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File;
 
     if (!file) {
-      throw new Error("File not found in form data");
+      return NextResponse.json(
+        {
+          response: "File not found in form data",
+        },
+        { status: StatusCodes.NOT_FOUND }
+      );
     }
 
     //method to get buffer from the file
@@ -48,12 +54,15 @@ export async function POST(req: NextRequest) {
     // Send the extracted text to the generative model
     const result = await chatSession.sendMessage(fileText);
     // Return the AI-generated response
-    return NextResponse.json({ response: JSON.parse(result.response.text()) });
+    return NextResponse.json(
+      { response: JSON.parse(result.response.text()) },
+      { status: StatusCodes.OK }
+    );
   } catch (error) {
     console.error("Error in POST handler:", error);
     return NextResponse.json(
       { error: "An error occurred while processing the request." },
-      { status: 500 }
+      { status: StatusCodes.INTERNAL_SERVER_ERROR }
     );
   }
 }
