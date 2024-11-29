@@ -44,6 +44,7 @@ export function PdfUploadDialog() {
         description: `Failed to process PDF. Please try again. ${error.message}`,
         variant: "destructive",
       });
+      console.log(error)
     } finally {
       setIsUploading(false);
     }
