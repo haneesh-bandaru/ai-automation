@@ -33,9 +33,9 @@ export function PdfUploadDialog() {
       const text = await response.text(); // Get raw text first
       console.log(text); // Log raw response for debugging
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(`HTTP error! Status: ${response.status}`);
+      // }
 
       try {
         const data = JSON.parse(text); // Manually parse if needed
