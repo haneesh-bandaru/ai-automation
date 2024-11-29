@@ -12,7 +12,7 @@ export default function DashboardLayout({
         <Sidebar />
       </div>
       <main className="md:pl-72">
-        <Header />
+        {typeof window !== 'undefined' && window.location.pathname !== '/dashboard/assign-tasks' && <Header />}
         {children}
       </main>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,11 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Loader2, Upload } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 export function PdfUploadDialog() {
+  const router = useRouter();
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
@@ -23,26 +25,23 @@ export function PdfUploadDialog() {
       const file = acceptedFiles[0];
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/uploads", {
         method: "POST",
         body: formData,
       });
 
-      if (!response.ok) throw new Error("Upload failed");
-
       const data = await response.json();
-
       toast({
         title: "PDF Processed Successfully",
-        description: `Generated ${data.tasks.length} tasks from the document.`,
+        description: `Generated ${data?.response?.tasks?.length} tasks from the document.`,
       });
 
-      // Here you can handle the generated tasks (e.g., update global state, redirect to tasks page)
+      router.push(`/dashboard/assign-tasks?data=${encodeURIComponent(JSON.stringify(data))}`)
 
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to process PDF. Please try again.",
+        description: `Failed to process PDF. Please try again. ${error.message}`,
         variant: "destructive",
       });
     } finally {
@@ -74,10 +73,10 @@ export function PdfUploadDialog() {
           {...getRootProps()}
           className={`
             mt-4 p-8 border-2 border-dashed rounded-lg text-center cursor-pointer
-            transition-colors duration-200 ease-in-out
+            transition - colors duration - 200 ease -in -out
             ${isDragActive ? "border-sky-500 bg-sky-50" : "border-gray-300"}
             ${isUploading ? "pointer-events-none opacity-50" : ""}
-          `}
+        `}
         >
           <input {...getInputProps()} />
           {isUploading ? (
