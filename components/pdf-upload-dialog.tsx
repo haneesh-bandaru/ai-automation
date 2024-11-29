@@ -30,11 +30,24 @@ export function PdfUploadDialog() {
         body: formData,
       });
 
-      const data = await response.json();
-      toast({
-        title: "PDF Processed Successfully",
-        description: `Generated ${data?.response?.tasks?.length} tasks from the document.`,
-      });
+      const text = await response.text(); // Get raw text first
+      console.log(text); // Log raw response for debugging
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      try {
+        const data = JSON.parse(text); // Manually parse if needed
+        toast({
+          title: "PDF Processed Successfully",
+          description: `Generated ${data?.response?.tasks?.length} tasks from the document.`,
+        });
+        console.log(data); // Log parsed data
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+
 
       router.push(`/dashboard/assign-tasks?data=${encodeURIComponent(JSON.stringify(data))}`)
 
