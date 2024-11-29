@@ -41,6 +41,14 @@ interface ProjectData {
 }
 
 export default function TasksPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <TasksPageContent />
+        </Suspense>
+    )
+}
+
+function TasksPageContent() {
     const searchParams = useSearchParams()
     const [projectData, setProjectData] = useState<ProjectData | null>(null)
 
@@ -56,176 +64,174 @@ export default function TasksPage() {
     }
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <div className="space-y-6 p-4 h-screen">
+            <h1 className="text-3xl p-4 font-bold text-gray-900">{projectData?.project_name}</h1>
+            <Tabs defaultValue="overview" className="space-y-4 ">
+                <TabsList>
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="phases">Phases</TabsTrigger>
+                    <TabsTrigger value="budget">Budget</TabsTrigger>
+                    <TabsTrigger value="security">Security</TabsTrigger>
+                    <TabsTrigger value="risks">Risks</TabsTrigger>
+                    <TabsTrigger value="tech-stack">Tech Stack</TabsTrigger>
+                </TabsList>
 
-            <div className="space-y-6 p-4 h-screen">
-                <h1 className="text-3xl p-4 font-bold text-gray-900">{projectData?.project_name}</h1>
-                <Tabs defaultValue="overview" className="space-y-4 ">
-                    <TabsList>
-                        <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="phases">Phases</TabsTrigger>
-                        <TabsTrigger value="budget">Budget</TabsTrigger>
-                        <TabsTrigger value="security">Security</TabsTrigger>
-                        <TabsTrigger value="risks">Risks</TabsTrigger>
-                        <TabsTrigger value="tech-stack">Tech Stack</TabsTrigger>
-                    </TabsList>
+                <TabsContent value="overview">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Project Overview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-gray-600">Timeline: {projectData?.project_timeline}</p>
+                            <h3 className="text-xl font-semibold mt-4 mb-2">Features</h3>
+                            <ul className="list-disc pl-5 space-y-2">
+                                {projectData?.features?.map((feature, index) => (
+                                    <li key={index} className="text-gray-600">{feature}</li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
-                    <TabsContent value="overview">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Project Overview</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-gray-600">Timeline: {projectData?.project_timeline}</p>
-                                <h3 className="text-xl font-semibold mt-4 mb-2">Features</h3>
-                                <ul className="list-disc pl-5 space-y-2">
-                                    {projectData?.features?.map((feature, index) => (
-                                        <li key={index} className="text-gray-600">{feature}</li>
-                                    ))}
-                                </ul>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                <TabsContent value="phases">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Project Phases</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ScrollArea className="h-[600px]">
+                                {projectData?.phases?.map((phase, index) => (
+                                    <Card key={index} className="mb-4">
+                                        <CardHeader>
+                                            <CardTitle>{phase?.phase}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-gray-600"><strong>Description:</strong> {phase?.description}</p>
+                                            <p className="text-gray-600"><strong>Duration:</strong> {phase?.duration}</p>
+                                            <h4 className="text-lg font-semibold mt-2 mb-1">Tasks</h4>
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead>Task ID</TableHead>
+                                                        <TableHead>Task Name</TableHead>
+                                                        <TableHead>Time Allocated</TableHead>
+                                                        <TableHead>Tech Stack</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    <TableRow>
+                                                        <TableCell>{phase?.tasks.task_id}</TableCell>
+                                                        <TableCell>{phase?.tasks.task_name}</TableCell>
+                                                        <TableCell>{phase?.tasks.time_allocated}</TableCell>
+                                                        <TableCell>{phase?.tasks.tech_stack}</TableCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </ScrollArea>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
-                    <TabsContent value="phases">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Project Phases</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ScrollArea className="h-[600px]">
-                                    {projectData?.phases?.map((phase, index) => (
-                                        <Card key={index} className="mb-4">
-                                            <CardHeader>
-                                                <CardTitle>{phase?.phase}</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p className="text-gray-600"><strong>Description:</strong> {phase?.description}</p>
-                                                <p className="text-gray-600"><strong>Duration:</strong> {phase?.duration}</p>
-                                                <h4 className="text-lg font-semibold mt-2 mb-1">Tasks</h4>
-                                                <Table>
-                                                    <TableHeader>
-                                                        <TableRow>
-                                                            <TableHead>Task ID</TableHead>
-                                                            <TableHead>Task Name</TableHead>
-                                                            <TableHead>Time Allocated</TableHead>
-                                                            <TableHead>Tech Stack</TableHead>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        <TableRow>
-                                                            <TableCell>{phase?.tasks.task_id}</TableCell>
-                                                            <TableCell>{phase?.tasks.task_name}</TableCell>
-                                                            <TableCell>{phase?.tasks.time_allocated}</TableCell>
-                                                            <TableCell>{phase?.tasks.tech_stack}</TableCell>
-                                                        </TableRow>
-                                                    </TableBody>
-                                                </Table>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                </ScrollArea>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    <TabsContent value="budget">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Budget Estimation</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Category</TableHead>
-                                            <TableHead>Range</TableHead>
+                <TabsContent value="budget">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Budget Estimation</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead>Range</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {Object?.entries(projectData?.budget_estimation).map(([category, { range }], index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{category}</TableCell>
+                                            <TableCell>{range}</TableCell>
                                         </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {Object?.entries(projectData?.budget_estimation).map(([category, { range }], index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>{category}</TableCell>
-                                                <TableCell>{range}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    <TabsContent value="security">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Security Considerations</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <ul className="list-disc pl-5 space-y-2">
-                                    {projectData?.security_considerations?.map((consideration, index) => (
-                                        <li key={index} className="text-gray-600">{consideration}</li>
                                     ))}
-                                </ul>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
-                    <TabsContent value="risks">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Risks and Mitigations</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Risk</TableHead>
-                                            <TableHead>Mitigation</TableHead>
+                <TabsContent value="security">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Security Considerations</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ul className="list-disc pl-5 space-y-2">
+                                {projectData?.security_considerations?.map((consideration, index) => (
+                                    <li key={index} className="text-gray-600">{consideration}</li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="risks">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Risks and Mitigations</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Risk</TableHead>
+                                        <TableHead>Mitigation</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {projectData?.risks_and_mitigations?.map(({ risk, mitigation }, index) => (
+                                        <TableRow key={index}>
+                                            <TableCell>{risk}</TableCell>
+                                            <TableCell>{mitigation}</TableCell>
                                         </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {projectData?.risks_and_mitigations?.map(({ risk, mitigation }, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>{risk}</TableCell>
-                                                <TableCell>{mitigation}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-
-                    <TabsContent value="tech-stack">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Technology Stack</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                    {Object?.entries(projectData?.technology_stack)?.map(([category, techs]) => (
-                                        <Card key={category}>
-                                            <CardHeader>
-                                                <CardTitle className="text-lg capitalize">{category}</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <ul className="list-disc pl-4 space-y-1">
-                                                    {Array?.isArray(techs) ? techs?.map((tech, index) => (
-                                                        <li key={index} className="text-gray-600">{tech}</li>
-                                                    )) : (
-                                                        <li className="text-gray-600">{techs}</li>
-                                                    )}
-                                                </ul>
-                                            </CardContent>
-                                        </Card>
                                     ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
-            </div>
-        </Suspense>
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="tech-stack">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Technology Stack</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                {Object?.entries(projectData?.technology_stack)?.map(([category, techs]) => (
+                                    <Card key={category}>
+                                        <CardHeader>
+                                            <CardTitle className="text-lg capitalize">{category}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <ul className="list-disc pl-4 space-y-1">
+                                                {Array?.isArray(techs) ? techs?.map((tech, index) => (
+                                                    <li key={index} className="text-gray-600">{tech}</li>
+                                                )) : (
+                                                    <li className="text-gray-600">{techs}</li>
+                                                )}
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
+        </div>
     )
 }
+
 
