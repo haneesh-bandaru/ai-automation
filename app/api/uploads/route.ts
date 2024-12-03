@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Ensure the correct import
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai"; // Ensure the correct import
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
       systemInstruction: `you are a project manager who have to create tasks based on the given pdf.
-      return the data in the following format:
+      return the data in the following format and also the returned data is a perfect json. Make sure to return the data in the following format:
       {
     "response": {
         "project_name": "{project_name}",
@@ -105,20 +105,15 @@ export async function POST(req: NextRequest) {
             }
         ],
         "technology_stack": {
+** choose only one stack technology and if needed add more than one technology **
             "frontend": [
                 "{frontend_tech_1}",
-                "{frontend_tech_2}",
-                "{frontend_tech_N}"
-            ],
+                ],
             "backend": [
                 "{backend_tech_1}",
-                "{backend_tech_2}",
-                "{backend_tech_N}"
             ],
             "database": [
                 "{database_tech_1}",
-                "{database_tech_2}",
-                "{database_tech_N}"
             ],
             "authentication": [
                 "{authentication_tech_1}",
@@ -151,42 +146,42 @@ export async function POST(req: NextRequest) {
       maxOutputTokens: 8192,
       responseMimeType: "application/json",
       //   responseSchema: {
-      //     type: "object",
+      //     type: SchemaType.OBJECT,
       //     properties: {
       //       response: {
-      //         type: "object",
+      //         type: SchemaType.OBJECT,
       //         properties: {
       //           project_name: {
-      //             type: "string",
+      //             type: SchemaType.STRING,
       //           },
       //           phases: {
-      //             type: "array",
+      //             type: SchemaType.ARRAY,
       //             items: {
-      //               type: "object",
+      //               type: SchemaType.OBJECT,
       //               properties: {
       //                 phase: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //                 description: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //                 duration: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //                 tasks: {
-      //                   type: "object",
+      //                   type: SchemaType.OBJECT,
       //                   properties: {
       //                     task_id: {
-      //                       type: "string",
+      //                       type: SchemaType.STRING,
       //                     },
       //                     task_name: {
-      //                       type: "string",
+      //                       type: SchemaType.STRING,
       //                     },
       //                     time_allocated: {
-      //                       type: "string",
+      //                       type: SchemaType.STRING,
       //                     },
       //                     tech_stack: {
-      //                       type: "string",
+      //                       type: SchemaType.STRING,
       //                     },
       //                   },
       //                 },
@@ -194,118 +189,118 @@ export async function POST(req: NextRequest) {
       //             },
       //           },
       //           project_timeline: {
-      //             type: "string",
+      //             type: SchemaType.STRING,
       //           },
       //           budget_estimation: {
-      //             type: "object",
+      //             type: SchemaType.OBJECT,
       //             properties: {
       //               development_team: {
-      //                 type: "object",
+      //                 type: SchemaType.OBJECT,
       //                 properties: {
       //                   range: {
-      //                     type: "string",
+      //                     type: SchemaType.STRING,
       //                   },
       //                 },
       //               },
       //               design: {
-      //                 type: "object",
+      //                 type: SchemaType.OBJECT,
       //                 properties: {
       //                   range: {
-      //                     type: "string",
+      //                     type: SchemaType.STRING,
       //                   },
       //                 },
       //               },
       //               third_party_apis: {
-      //                 type: "object",
+      //                 type: SchemaType.OBJECT,
       //                 properties: {
       //                   range: {
-      //                     type: "string",
+      //                     type: SchemaType.STRING,
       //                   },
       //                 },
       //               },
       //               hosting: {
-      //                 type: "object",
+      //                 type: SchemaType.OBJECT,
       //                 properties: {
       //                   range: {
-      //                     type: "string",
+      //                     type: SchemaType.STRING,
       //                   },
       //                 },
       //               },
       //               miscellaneous: {
-      //                 type: "object",
+      //                 type: SchemaType.OBJECT,
       //                 properties: {
       //                   range: {
-      //                     type: "string",
+      //                     type: SchemaType.STRING,
       //                   },
       //                 },
       //               },
       //             },
       //           },
       //           security_considerations: {
-      //             type: "array",
+      //             type: SchemaType.ARRAY,
       //             items: {
-      //               type: "string",
+      //               type: SchemaType.STRING,
       //             },
       //           },
       //           risks_and_mitigations: {
-      //             type: "array",
+      //             type: SchemaType.ARRAY,
       //             items: {
-      //               type: "object",
+      //               type: SchemaType.OBJECT,
       //               properties: {
       //                 risk: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //                 mitigation: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //             },
       //           },
       //           technology_stack: {
-      //             type: "object",
+      //             type: SchemaType.OBJECT,
       //             properties: {
       //               frontend: {
-      //                 type: "array",
+      //                 type: SchemaType.ARRAY,
       //                 items: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //               backend: {
-      //                 type: "array",
+      //                 type: SchemaType.ARRAY,
       //                 items: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //               database: {
-      //                 type: "array",
+      //                 type: SchemaType.ARRAY,
       //                 items: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //               authentication: {
-      //                 type: "array",
+      //                 type: SchemaType.ARRAY,
       //                 items: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //               storage: {
-      //                 type: "array",
+      //                 type: SchemaType.ARRAY,
       //                 items: {
-      //                   type: "string",
+      //                   type: SchemaType.STRING,
       //                 },
       //               },
       //               encryption: {
-      //                 type: "string",
+      //                 type: SchemaType.STRING,
       //               },
       //               push_notifications: {
-      //                 type: "string",
+      //                 type: SchemaType.STRING,
       //               },
       //             },
       //           },
       //           features: {
-      //             type: "array",
+      //             type: SchemaType.ARRAY,
       //             items: {
-      //               type: "string",
+      //               type: SchemaType.STRING,
       //             },
       //           },
       //         },
@@ -317,7 +312,6 @@ export async function POST(req: NextRequest) {
     // Start a chat session with the generative model
     const chatSession = model.startChat({
       generationConfig,
-      history: [],
     });
 
     // Send the extracted text to the generative model

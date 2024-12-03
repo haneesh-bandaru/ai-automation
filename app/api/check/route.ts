@@ -1,9 +1,15 @@
+// app/api/your-route/route.js
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  // Example logic for the GET request
-  const response = { message: `Success and ${process.env.CHECK}` };
+export async function POST(req: NextRequest) {
+  // Handle POST request
+  // const data = (await req?.json()) || "No data received";
+  return NextResponse.json(
+    { message: "POST request successful" },
+    { status: 201 }
+  );
+}
 
-  // Make sure to return the NextResponse object correctly
-  return NextResponse.json(response);
+export async function GET() {
+  return NextResponse.json({ message: "GET request successful" });
 }
