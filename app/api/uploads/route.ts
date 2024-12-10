@@ -1,6 +1,7 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai"; // Ensure the correct import
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
+import { google } from "@ai-sdk/google";
 
 const { GEMINI_API_KEY } = process.env;
 
